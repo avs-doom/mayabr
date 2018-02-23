@@ -98,6 +98,9 @@ export default class Dashboard extends Component {
         return (
             <section className="forecast">
                 {filterdForecast.map(this._renderForecastTemplate.bind(this))}
+                {filterdForecast.length === 0
+                    ? <span style={{color: '#666'}}>Пусто :(</span>
+                    :null}
              </section>
         );
     }
