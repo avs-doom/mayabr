@@ -99,8 +99,8 @@ export default class Form extends Component {
         const suggestions = this._getSuggestions(name);
         
         return (
-            <section className="dashboard">
-                <div className="dashboard__form">
+            <article className="form">
+                <div className="form__base">
                     <form>
                         <Autosuggest
                             suggestions={suggestions}
@@ -122,10 +122,10 @@ export default class Form extends Component {
                         >+</button>
                     </form>
                 </div>
-                <div className="dashboard__filter">
+                <div className="form__filters">
                     <Filter />
                 </div>
-            </section>
+            </article>
         );
     }
 }

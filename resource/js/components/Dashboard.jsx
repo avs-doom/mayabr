@@ -69,19 +69,19 @@ export default class Dashboard extends Component {
     
     //Можно былобы создать отдельный компонент карточки,
     //но нет смысла т.к. используется только здесь
-    _renderForecastTemplate (item, index) {
+    _renderBlockTemplate (item, index) {
         
         const { name, temp, wind, pressure, id, type } = item;
         
         return (
-            <div className="forecast__block" key={index}>
+            <div className="dashboard__block" key={index}>
                 <div><b>{name}</b></div>
                 <div style={{margin: '10px 0', fontSize: '24px'}}>
-                    <img src={this._getIcon(type)} className="forecast__icon" /> {temp} &#8451;
+                    <img src={this._getIcon(type)} className="dashboard__icon" /> {temp} &#8451;
                 </div>
                 <div>Ветер: {wind} м/с</div>
                 <div>Давление: {pressure} мм</div>
-                <div className="forecast__block-remove" onClick={this._handlerClickRemove.bind(this, id)}>x</div> 
+                <div className="dashboard__block-remove" onClick={this._handlerClickRemove.bind(this, id)}>x</div> 
             </div>
         );
     }
@@ -91,17 +91,17 @@ export default class Dashboard extends Component {
         
         const { dashboard, minTemp } = this.props;
         
-        const filterdForecast = dashboard.filter(item => {
+        const blocks = dashboard.filter(item => {
             return item.temp > minTemp;
         });
         
         return (
-            <section className="forecast">
-                {filterdForecast.map(this._renderForecastTemplate.bind(this))}
-                {filterdForecast.length === 0
+            <article className="dashboard">
+                {blocks.map(this._renderBlockTemplate.bind(this))}
+                {blocks.length === 0
                     ? <span style={{color: '#666'}}>Пусто :(</span>
                     :null}
-             </section>
+             </article>
         );
     }
 }
