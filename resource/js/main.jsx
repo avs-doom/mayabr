@@ -15,13 +15,13 @@ export class Main  {
     constructor() {
         
         const store = createStore(forecast);
-        const target = document.getElementById('application');
+        const container = document.getElementById('application');
         
         ReactDOM.render(
             <Provider store={store}>
                 <Application />
             </Provider>
-        , target);
+        , container);
     }
 }
 

@@ -13,7 +13,7 @@ import { removeCity } from '../_core/Store';
         minTemp: state.minTemp
     }),
     dispatch => ({
-        onRemoveCity: id => dispatch(removeCity(id))
+        onRemoveCity: cityId => dispatch(removeCity(cityId))
     })
 )
 
@@ -58,12 +58,12 @@ export default class Dashboard extends Component {
         
     }
     
-    _handlerClickRemove(id) {
+    _handlerClickRemove(cityId) {
         
         const { onRemoveCity } = this.props;
         
         if (onRemoveCity) {
-            onRemoveCity(id);
+            onRemoveCity(cityId);
         }
     }
     

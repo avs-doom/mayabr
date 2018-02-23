@@ -16,10 +16,10 @@ export default class Application extends Component {
     render() {
         
         return (
-            <section className="wrapper">
+            <div className="wrapper">
                 <Form />
                 <Dashboard />
-            </section>
+            </div>
         );
     }
 }
