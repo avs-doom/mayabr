@@ -71,13 +71,11 @@ export default class Form extends Component {
     _onChange(event, { newValue, method }) {
         
         switch(method) {
-            case 'click':
-            case 'down':
-            case 'enter':
-                this._setCity(newValue);
+            case 'type':
+                this._setCity({ name: newValue });
                 break;
             default:
-                this._setCity({ name: newValue })
+                this._setCity(newValue);
                 break;
         }
     }
@@ -104,24 +102,24 @@ export default class Form extends Component {
             <section className="dashboard">
                 <div className="dashboard__form">
                     <form>
-                    <Autosuggest
-                        suggestions={suggestions}
-                        onSuggestionsFetchRequested={() => {}}
-                        onSuggestionsClearRequested={() => {}}
-                        renderSuggestion={item => { return <span>{item.name}</span>; }}
-                        getSuggestionValue={item => { return item; }}
-                        inputProps={{
-                            placeholder: "Выберите город из списка",
-                            value: name,
-                            onChange: this._onChange.bind(this)}
-                        }
-                    />
-                    <button
-                        type="submit"
-                        className="button" 
-                        onClick={this._handlerClickAddCityButton.bind(this)}
-                        disabled={!id}
-                    >+</button>
+                        <Autosuggest
+                            suggestions={suggestions}
+                            onSuggestionsFetchRequested={() => {}}
+                            onSuggestionsClearRequested={() => {}}
+                            renderSuggestion={item => { return <span>{item.name}</span>; }}
+                            getSuggestionValue={item => { return item; }}
+                            inputProps={{
+                                placeholder: "Выберите город из списка",
+                                value: name || '',
+                                onChange: this._onChange.bind(this)}
+                            }
+                        />
+                        <button
+                            type="submit"
+                            className="button" 
+                            onClick={this._handlerClickAddCityButton.bind(this)}
+                            disabled={!id}
+                        >+</button>
                     </form>
                 </div>
                 <div className="dashboard__filter">
