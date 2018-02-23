@@ -15,7 +15,7 @@ import Filter from './Filter';
         cities: state.cities
     }),
     dispatch => ({
-        onAddCity: id => dispatch(addCity(id))
+        onAddCity: cityId => dispatch(addCity(cityId))
     })
 )
 
@@ -53,7 +53,7 @@ export default class Form extends Component {
         this.setState({city});
     }
     
-    _getSuggestions(value) {
+    _getSuggestions(value = '') {
         
         const { cities } = this.state;
         const valueTrim = value && value.trim();
