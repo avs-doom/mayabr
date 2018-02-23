@@ -3,8 +3,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import Form from '../components/Form';
 import Dashboard from '../components/Dashboard';
-import Forecast from '../components/Forecast';
 
 
 export default class Application extends Component {
@@ -17,8 +17,8 @@ export default class Application extends Component {
         
         return (
             <section className="wrapper">
+                <Form />
                 <Dashboard />
-                <Forecast />
             </section>
         );
     }

@@ -23,7 +23,7 @@ const initialState = {
         wind: 12,
         pressure: 740
     }],
-    forecast: [],
+    dashboard: [],
     minTemp: 0
 };
 
@@ -33,34 +33,33 @@ const CHANGE_FILTER = 'CHANGE_FILTER';
 
 export function forecast(state = initialState, action) {
     
-    let forecast = [];
+    let dashboard = [];
     const { type, cityId, minTemp } = action;
     const { cities } = state;
     
     if (type === ADD_CITY) {
         
-        forecast = state.forecast.slice();
+        dashboard = state.dashboard.slice();
         
         const city = cities.find(city => {
-            return city.id === cityId && !forecast.find(item => {
+            return city.id === cityId && !dashboard.find(item => {
                 return item.id === cityId;
             });
         });
         
         if (city) {
-            forecast.push(city);
+            dashboard.push(city);
         }
         
-        return {...state, forecast};
+        return {...state, dashboard};
     } else if (type === REMOVE_CITY) {
         
-        forecast = state.forecast.filter(item => {
+        dashboard = state.dashboard.filter(item => {
                 return item.id !== cityId;
             });
                            
-        return {...state, forecast};
+        return {...state, dashboard};
     } else if (type === CHANGE_FILTER) {
-        
         return {...state, minTemp};
     } else {
         return state;

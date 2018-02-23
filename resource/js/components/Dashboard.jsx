@@ -4,18 +4,16 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import Autosuggest from 'react-autosuggest';
-
-import { addCity } from '../_core/Store';
-import Filter from './Filter';
+import { removeCity } from '../_core/Store';
 
 
 @connect(
     state => ({
-        cities: state.cities
+        dashboard: state.dashboard,
+        minTemp: state.minTemp
     }),
     dispatch => ({
-        onAddCity: id => dispatch(addCity(id))
+        onRemoveCity: id => dispatch(removeCity(id))
     })
 )
 
@@ -23,7 +21,8 @@ export default class Dashboard extends Component {
     
     static get propTypes() {
         return {
-            cities: PropTypes.array.isRequired
+            dashboard: PropTypes.array.isRequired,
+            minTemp: PropTypes.number.isRequired
         }
     }
     
@@ -34,97 +33,72 @@ export default class Dashboard extends Component {
     }
     
     componentWillReceiveProps(nextProps) {
-
+        
         this.setState(this._setState(nextProps));
     }
     
     _setState(props) {
         
         return {
-            cities: props.cities,
-            city: {
-                name: ''
-            }
+            dashboard: props.dashboard
         };
     }
     
-    _setCity(city = {name: ''}) {
+    _getIcon(type) {
         
-        this.setState({city});
-    }
-    
-    _getSuggestions(value) {
-        
-        const { cities } = this.state;
-        const valueTrim = value && value.trim();
-        const escapedValue = valueTrim.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        
-        if (escapedValue === '') {
-            return [];
-        }
-        
-        const regex = new RegExp(`^${escapedValue}`, 'i');
-        
-        return cities.filter(city => regex.test(city.name));
-    }
-    
-    _onChange(event, { newValue, method }) {
-        
-        switch(method) {
-            case 'click':
-            case 'down':
-            case 'enter':
-                this._setCity(newValue);
-                break;
+        switch(type) {
+            
+            case 1:
+                return 'https://yastatic.net/weather/i/icons/funky/dark/skc_d.svg';
+            case 2:
+                return 'https://yastatic.net/weather/i/icons/funky/dark/ovc_-ra.svg';
             default:
-                this._setCity({ name: newValue })
-                break;
+                return '';
+        }
+        
+    }
+    
+    _handlerClickRemove(id) {
+        
+        const { onRemoveCity } = this.props;
+        
+        if (onRemoveCity) {
+            onRemoveCity(id);
         }
     }
     
-    _handlerClickAddCityButton() {
+    //Можно былобы создать отдельный компонент карточки,
+    //но нет смысла т.к. используется только здесь
+    _renderForecastTemplate (item, index) {
         
-        const { city } = this.state;
-        const { onAddCity } = this.props;
+        const { name, temp, wind, pressure, id, type } = item;
         
-        if (onAddCity) {
-            onAddCity(city.id);
-        }
-        
-        this._setCity();
+        return (
+            <div className="forecast__block" key={index}>
+                <div><b>{name}</b></div>
+                <div style={{margin: '10px 0', fontSize: '24px'}}>
+                    <img src={this._getIcon(type)} className="forecast__icon" /> {temp} &#8451;
+                </div>
+                <div>Ветер: {wind} м/с</div>
+                <div>Давление: {pressure} мм</div>
+                <div className="forecast__block-remove" onClick={this._handlerClickRemove.bind(this, id)}>x</div> 
+            </div>
+        );
     }
+    
     
     render() {
         
-        const { city: { name, id } } = this.state;
+        const { dashboard, minTemp } = this.props;
         
-        const suggestions = this._getSuggestions(name);
+        const filterdForecast = dashboard.filter(item => {
+            return item.temp > minTemp;
+        });
         
         return (
-            <section className="dashboard">
-                <div className="dashboard__form">
-                    <Autosuggest
-                        suggestions={suggestions}
-                        onSuggestionsFetchRequested={() => {}}
-                        onSuggestionsClearRequested={() => {}}
-                        renderSuggestion={item => { return <span>{item.name}</span>; }}
-                        getSuggestionValue={item => { return item; }}
-                        inputProps={{
-                            placeholder: "Выберите город из списка",
-                            value: name,
-                            onChange: this._onChange.bind(this)}
-                        }
-                    />
-                    <button 
-                        className="button" 
-                        onClick={this._handlerClickAddCityButton.bind(this)}
-                        disabled={!id}
-                    >+</button>
-                </div>
-                <div className="dashboard__filter">
-                    <Filter />
-                </div>
-            </section>
+            <section className="forecast">
+                {filterdForecast.map(this._renderForecastTemplate.bind(this))}
+             </section>
         );
     }
 }
